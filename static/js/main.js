@@ -1,9 +1,10 @@
 new Vue({
     el: '#app',
     data: {
-        data: {}, // Ваши данные JSON здесь
-        groupVisible: {}, // Для отслеживания видимости групп
-        personVisible: {} // Для отслеживания видимости персон
+        data: {},
+        groupVisible: {},
+        personVisible: {},
+        personDateVisible: {},
     },
     mounted() {
         this.loadData();
@@ -29,12 +30,14 @@ new Vue({
                 });
         },
         toggleGroup(groupName) {
-            // Переключение видимости группы
             this.$set(this.groupVisible, groupName, !this.groupVisible[groupName]);
         },
         togglePerson(personName) {
-            // Переключение видимости персоны
             this.$set(this.personVisible, personName, !this.personVisible[personName]);
+        },
+        togglePersonDate(personName, date) {
+            const personDate = personName + date
+            this.$set(this.personDateVisible, personDate, !this.personDateVisible[personDate]);
         }
     }
 });
