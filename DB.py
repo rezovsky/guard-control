@@ -11,8 +11,8 @@ class DB:
         with app.app_context():
             self.db.create_all()
 
-    def add_event(self, **kwargs):
-        new_user = Events(**kwargs)
+    def add_event(self, data):
+        new_user = Events(**data)
         self.db.session.add(new_user)
         self.db.session.commit()
 

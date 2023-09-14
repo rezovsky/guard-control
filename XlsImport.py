@@ -5,8 +5,9 @@ import xlrd
 
 
 class XlsImport:
-    def __init__(self, folder_path):
+    def __init__(self, folder_path, db):
         self.folder_path = folder_path
+        self.db = db
 
     def xls_import(self):
 
@@ -55,6 +56,14 @@ class XlsImport:
 
             if date and class_name and name and time and action:
                 data_dict[class_name][name][date][time] = action
+                event = {
+                    'date': date,
+                    'name': name,
+                    'group': class_name,
+                    'action': action,
+                    'time': time
+                }
+                self.db.add_event(event)
 
             previous_row_data = row
 

@@ -5,14 +5,14 @@ from XlsImport import XlsImport
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:password@localhost/db'
 
 db = DB(app)
 
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    xlsimport = XlsImport('_xls')
+    xlsimport = XlsImport('_xls', db)
     return jsonify(xlsimport.xls_import())
 
 
