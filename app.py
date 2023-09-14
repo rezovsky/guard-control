@@ -9,8 +9,10 @@ from models import db
 
 app = Flask(__name__)
 
-db_file = os.path.join(os.path.dirname(__file__), 'db.sqlite')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_file}'
+db_user = "guard"
+db_password = "12345"
+db_name = "guard"
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_password}@localhost/{db_name}'
 
 db.init_app(app)
 

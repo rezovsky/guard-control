@@ -16,7 +16,7 @@ class XlsImport:
         # Получаем список файлов в папке
         files = os.listdir(self.folder_path)
 
-        # Перебираем файлы и выбираем первый файл с расширением .xls
+        # Перебираем файлы и выбираем первый файл с расширением ._xls
         for file in files:
             if file.endswith(".xls"):
                 file_path = os.path.join(self.folder_path, file)
