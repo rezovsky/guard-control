@@ -1,11 +1,13 @@
 from flask import Flask, jsonify, render_template
-import os
-import xlrd
-from collections import defaultdict
 
+from DB import DB
 from XlsImport import XlsImport
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/db'
+
+db = DB(app)
 
 
 @app.route('/get_data', methods=['GET'])
