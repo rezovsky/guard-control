@@ -2,12 +2,14 @@ import os
 from collections import defaultdict
 
 import xlrd
+from DataBaseFunction import DataBaseFunction
 
 
 class XlsImport:
     def __init__(self, folder_path, db):
         self.folder_path = folder_path
         self.db = db
+        self.db_function = DataBaseFunction(db)
 
     def xls_import(self):
 
@@ -63,7 +65,7 @@ class XlsImport:
                     'action': action,
                     'time': time
                 }
-                self.db.add_event(event)
+                self.db_function.add_event(event)
 
             previous_row_data = row
 
