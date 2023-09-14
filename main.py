@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    xlsimport = XlsImport('xls')
+    xlsimport = XlsImport('_xls')
     return jsonify(xlsimport.xls_import())
 
 
