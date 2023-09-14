@@ -69,4 +69,4 @@ class XlsImport:
 
             previous_row_data = row
 
-        return data_dict
+        return 'ok'

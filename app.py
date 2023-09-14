@@ -1,9 +1,7 @@
-import os
-
 from flask import Flask, jsonify, render_template
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
 
+from DataBaseFunction import DataBaseFunction
 from XlsImport import XlsImport
 from models import db
 
@@ -19,10 +17,17 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 
-@app.route('/get_data', methods=['GET'])
-def get_data():
+@app.route('/import', methods=['GET'])
+def importXls():
     xlsimport = XlsImport('_xls', db)
     return jsonify(xlsimport.xls_import())
+
+
+@app.route('/get_data', methods=['GET'])
+def get_data():
+    db_function = DataBaseFunction(db)
+    events = db_function.get_all_events()
+    return jsonify(events)
 
 
 @app.route('/', methods=['GET'])

@@ -14,6 +14,7 @@ new Vue({
             axios.get('/get_data')
                 .then(response => {
                     this.data = response.data;
+                    console.log(this.data)
                     // Инициализация видимости групп
                     for (const groupName in this.data) {
                         this.$set(this.groupVisible, groupName, false);

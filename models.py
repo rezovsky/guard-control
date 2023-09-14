@@ -11,3 +11,13 @@ class Events(db.Model):
     group = db.Column(db.String(50), nullable=False)
     action = db.Column(db.String(50), nullable=False)
     time = db.Column(db.String(5), nullable=False)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'date': self.date,
+            'name': self.name,
+            'group': self.group,
+            'action': self.action,
+            'time': self.time
+        }

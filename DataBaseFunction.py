@@ -21,4 +21,6 @@ class DataBaseFunction:
             self.db.session.commit()
 
     def get_all_events(self):
-        return Events.query.all()
+        events = Events.query.all()
+        events_list = [event.serialize() for event in events]
+        return events_list
