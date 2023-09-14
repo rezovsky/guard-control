@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify, render_template
 
 from DB import DB
@@ -5,7 +7,8 @@ from XlsImport import XlsImport
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:password@localhost/db'
+db_file = os.path.join(os.path.dirname(__file__), 'db.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_file}'
 
 db = DB(app)
 

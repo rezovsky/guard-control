@@ -1,4 +1,4 @@
 /venv/
 /.idea/
 /_xls/
-db.sqllite
+db.sqlite
