@@ -8,9 +8,23 @@
 </head>
 <body>
 {% raw %}
-<div id="app" class="container mt-4">
+    <div id="app" class="container mt-4">
+        <div v-for="group in items.unique_groups" :key="group">
+            <div>{{ group }}</div>
+            <table class="table">
+                <tr>
+                    <th>Имя</th>
+                    <th v-for="date in items.unique_dates" :key="date">
+                        <span class="rotate-th">{{ date }}</span>
+                    </th>
+                </tr>
+                <tr v-for="student in items.students_info" :key="student" v-if="student.group === group">
+                    <td>{{ student.name }}</td>
+                </tr>
+            </table>
+        </div>
 
-</div>
+    </div>
 {% endraw %}
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>

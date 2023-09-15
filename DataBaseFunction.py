@@ -36,7 +36,7 @@ class DataBaseFunction:
         # Получаем список уникальных дат только за последние 7 дней
         unique_dates = self.db.session.query(Events.date).distinct().filter(Events.date >= start_date_str,
                             Events.date <= end_date_str).order_by(Events.date).all()
-        unique_dates = [date[0] for date in unique_dates]
+        unique_dates = [datetime.strptime(date[0], '%Y-%m-%d').strftime('%d.%m') for date in unique_dates]
         # Получаем список уникальных групп
         unique_groups = self.db.session.query(Events.group).distinct().order_by(Events.group).all()
         unique_groups = [group[0] for group in unique_groups]
