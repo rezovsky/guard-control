@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from select import select
 
 from models import Events
 from sqlalchemy import func
@@ -26,7 +27,7 @@ class DataBaseFunction:
 
     def get_all_events(self):
         # Вычисляем текущую дату и временной интервал для последних 7 дней
-        end_date = datetime.now()
+        end_date = datetime.now() #- timedelta(days=1)
         start_date = end_date - timedelta(days=14)
 
         # Преобразуем даты в строки в соответствии с форматом в базе данных
@@ -38,9 +39,48 @@ class DataBaseFunction:
                                                                             Events.date <= end_date_str).order_by(
             Events.date).all()
         unique_dates = [datetime.strptime(date[0], '%Y-%m-%d').strftime('%d.%m') for date in unique_dates]
+
         # Получаем список уникальных групп
         unique_groups = self.db.session.query(Events.group).distinct().order_by(Events.group).all()
         unique_groups = [group[0] for group in unique_groups]
+
+        # Создаем словарь для хранения количества студентов с последним статусом "вход" по группам
+        count_by_group = {}
+
+        # Перебираем группы
+        for group_name in unique_groups:
+            # Получаем список учеников и их последних событий за текущий день
+            count_students_data = self.db.session.query(
+                Events.name,
+                func.json_build_object(
+                    'action', Events.action,
+                    'time', Events.time
+                ).label('event_info')
+            ).filter(
+                Events.date == end_date_str,  # Фильтр по сегодняшней дате
+                Events.group == group_name  # Фильтр по текущей группе
+            ).all()
+            # Переменные для подсчета студентов с последним статусом "вход"
+            count = 0
+
+            # Перебираем учеников и их последние события
+            students_events = {}
+            for student in count_students_data:
+                students_events[student[0]] = [dict(student[1])]
+            for student, events in students_events.items():
+                events_by_time = {}
+
+                # Находим событие с максимальным временем
+                for event in events:
+                    event_time = event['time']
+                    events_by_time[event_time] = event['action']
+
+                sorted_events = dict(sorted(events_by_time.items(), reverse=True))
+                if next(iter(sorted_events.values())) == 'вход':
+                    count += 1
+
+            # Записываем результат в словарь
+            count_by_group[group_name] = count
 
         # Получаем список учеников с их событиями только за последние 7 дней
         students_data = self.db.session.query(
@@ -80,6 +120,7 @@ class DataBaseFunction:
         data = {
             'unique_dates': unique_dates,
             'unique_groups': unique_groups,
+            'count_by_group': count_by_group,
             'students_info': students_info
         }
 

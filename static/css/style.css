@@ -1,13 +1,16 @@
-table, tr, th, td{
-  border: 1px solid #cccccc;
+table {
+  /*width: 100%;*/
   border-collapse: collapse;
+  border-spacing: 0;
 }
 
-td{
-  padding: 0;
-  margin: 0;
+table, th, td {
+  padding: 10px; /* Установите желаемый размер отступа */
 }
 
+th, td {
+  border: 1px solid #cccccc;
+}
 
 
 .rotate-th{

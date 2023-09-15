@@ -10,7 +10,7 @@
 {% raw %}
     <div id="app" class="container mt-4">
         <div v-for="group in items.unique_groups" :key="group">
-            <h2>{{ group }}</h2>
+            <h2>{{ group }} ({{ items.count_by_group[group] }})</h2>
             <table>
                 <tr>
                     <th></th>
