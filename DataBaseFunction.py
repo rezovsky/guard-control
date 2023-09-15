@@ -35,7 +35,8 @@ class DataBaseFunction:
 
         # Получаем список уникальных дат только за последние 7 дней
         unique_dates = self.db.session.query(Events.date).distinct().filter(Events.date >= start_date_str,
-                            Events.date <= end_date_str).order_by(Events.date).all()
+                                                                            Events.date <= end_date_str).order_by(
+            Events.date).all()
         unique_dates = [datetime.strptime(date[0], '%Y-%m-%d').strftime('%d.%m') for date in unique_dates]
         # Получаем список уникальных групп
         unique_groups = self.db.session.query(Events.group).distinct().order_by(Events.group).all()
@@ -45,44 +46,36 @@ class DataBaseFunction:
         students_data = self.db.session.query(
             Events.name,
             Events.group,
+            Events.date,
             func.json_build_object(
                 'action', Events.action,
-                'date', Events.date,
                 'time', Events.time
             ).label('event_info')
         ).filter(Events.date >= start_date_str, Events.date <= end_date_str).order_by(Events.name, Events.date,
                                                                                       Events.time).all()
 
-        students_info = []
-
-        current_student = None
-        current_info = None
+        students_info = {}
 
         for student in students_data:
-            if student.name != current_student:
-                if current_info:
-                    students_info.append({
-                        'name': current_student,
-                        'group': current_info['group'],
-                        'events': current_info['events']
-                    })
-                current_student = student.name
-                current_info = {
-                    'group': student.group,
-                    'events': []
-                }
+            print(student)
+            student_name = student[0]
+            group_name = student[1]
+            event_date = student[2]
+            action = student[3]['action']
+            time = student[3]['time']
 
-            current_info['events'].append({
-                'action': student.event_info['action'],
-                'date': student.event_info['date'],
-                'time': student.event_info['time']
-            })
+            if group_name not in students_info:
+                students_info[group_name] = {}
 
-        if current_info:
-            students_info.append({
-                'name': current_student,
-                'group': current_info['group'],
-                'events': current_info['events']
+            if student_name not in students_info[group_name]:
+                students_info[group_name][student_name] = {}
+
+            if event_date not in students_info[group_name][student_name]:
+                students_info[group_name][student_name][event_date] = []
+
+            students_info[group_name][student_name][event_date].append({
+                'action': action,
+                'time': time
             })
 
         data = {
