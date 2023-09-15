@@ -27,7 +27,7 @@ class DataBaseFunction:
     def get_all_events(self):
         # Вычисляем текущую дату и временной интервал для последних 7 дней
         end_date = datetime.now()
-        start_date = end_date - timedelta(days=7)
+        start_date = end_date - timedelta(days=14)
 
         # Преобразуем даты в строки в соответствии с форматом в базе данных
         start_date_str = start_date.strftime('%Y-%m-%d')
@@ -57,10 +57,9 @@ class DataBaseFunction:
         students_info = {}
 
         for student in students_data:
-            print(student)
             student_name = student[0]
             group_name = student[1]
-            event_date = student[2]
+            event_date = datetime.strptime(student[2], '%Y-%m-%d').strftime('%d.%m')
             action = student[3]['action']
             time = student[3]['time']
 

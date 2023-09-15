@@ -1,4 +1,64 @@
+table, tr, th, td{
+  border: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+
+td{
+  padding: 0;
+  margin: 0;
+}
+
+
+
 .rotate-th{
     writing-mode: vertical-rl;
     transform: rotate(180deg);
+}
+
+.square {
+  width: 100%;
+  height: 25px;
+  padding: 0;
+  margin: 0;
+}
+
+.gray {
+  background-color: gray;
+}
+
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
+}
+
+/* Стили для контейнера подсказки */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Стили для содержимого подсказки */
+.tooltip-content {
+  visibility: hidden;
+  position: absolute;
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+}
+
+/* Показываем подсказку при наведении мыши на контейнер */
+.tooltip-container:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
 }

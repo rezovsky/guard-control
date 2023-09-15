@@ -10,16 +10,23 @@
 {% raw %}
     <div id="app" class="container mt-4">
         <div v-for="group in items.unique_groups" :key="group">
-            <div>{{ group }}</div>
-            <table class="table">
+            <h2>{{ group }}</h2>
+            <table>
                 <tr>
-                    <th>Имя</th>
+                    <th></th>
                     <th v-for="date in items.unique_dates" :key="date">
                         <span class="rotate-th">{{ date }}</span>
                     </th>
                 </tr>
-                <tr v-for="student in items.students_info" :key="student" v-if="student.group === group">
-                    <td>{{ student.name }}</td>
+                <tr v-for="(student_events, student_name) in items.students_info[group]">
+                    <td>{{ student_name }}</td>
+                    <td v-for="date in items.unique_dates">
+                        <div :class="getStatus(date, student_events)" class="tooltip-container">
+                            <div class="tooltip-content">
+                                {{ getLastEvent(date, student_events) }}
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </table>
         </div>
