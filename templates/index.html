@@ -9,31 +9,8 @@
 <body>
 {% raw %}
 <div id="app" class="container mt-4">
-    <div v-for="(group, groupName) in data" :key="groupName" class="card">
-        <div class="card-body">
-            <button class="btn btn-block btn-primary font-weight-bold" @click="toggleGroup(groupName)">{{ groupName }}</button>
-            <div v-if="groupVisible[groupName]" class="card mt-2">
-                <div class="card-body">
-                    <div v-for="(person, personName) in group" :key="personName">
-                        <button class="btn btn-block btn-secondary" @click="togglePerson(personName)">{{ personName }}</button>
-                        <div v-if="personVisible[personName]" class="card mt-2">
-                            <div class="card-body">
-                                <div v-for="(dates, date) in person" :key="date">
-                                    <button class="btn btn-block btn-info" @click="togglePersonDate(personName, date)">{{ date }}</button>
-                                    <div v-if="personDateVisible[personName + date]" class="card mt-2">
-                                        <div class="card-body">
-                                            <div v-for="(timeInfo, time) in dates" :key="time">
-                                                <span>{{ time }}</span>: <span>{{ timeInfo }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div v-for="item in data">
+        {{ item.date }} {{ item.name }} {{ item.action }} {{ item.time }}
     </div>
 </div>
 
