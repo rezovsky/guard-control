@@ -135,3 +135,6 @@ class DataBaseFunction:
         }
 
         return data
+
+    def get_unique_group(self):
+        return self.db.session.query(Events.group).distinct().order_by(Events.group).all
