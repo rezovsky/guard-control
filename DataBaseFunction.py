@@ -19,7 +19,7 @@ class DataBaseFunction:
         self.days_interval = 14
 
         # Вычисляем текущую дату и временной интервал
-        now_date = datetime.now()   - timedelta(days=1) # это нужно для ночной разработки, когда уже наступило завтра
+        now_date = datetime.now() - timedelta(days=1)  # это нужно для ночной разработки, когда уже наступило завтра
         start_date = now_date - timedelta(days=self.days_interval)
 
         # Преобразуем даты в строки в соответствии с форматом в базе данных
@@ -52,6 +52,7 @@ class DataBaseFunction:
                 Events.group == group_name  # Фильтр по текущей группе
             )
             count_students_data = group_filter(query, filter_group)
+
             # Переменные для подсчета студентов с последним статусом "вход"
             count = 0
 
@@ -75,8 +76,9 @@ class DataBaseFunction:
             count_by_group[group_name] = count
 
         # Получаем список учеников с их событиями
-        query = self.get_students().filter(Events.date >= self.start_date_str, Events.date <= self.now_date_str).order_by(Events.name,
-                                                                                                Events.date, Events.time)
+        query = self.get_students().filter(Events.date >= self.start_date_str,
+                                           Events.date <= self.now_date_str).order_by(Events.name,
+                                                                                      Events.date, Events.time)
         students_data = group_filter(query, filter_group)
 
         students_info = {}
@@ -134,4 +136,3 @@ class DataBaseFunction:
                 'time', Events.time
             ).label('event_info')
         )
-
