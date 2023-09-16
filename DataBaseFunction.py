@@ -6,12 +6,6 @@ from sqlalchemy import func
 from flask import jsonify
 
 
-def group_filter(query, filter_group):
-    if filter_group is not None:
-        query = query.filter(Events.group == filter_group)
-    return query.all()
-
-
 class DataBaseFunction:
 
     def __init__(self, db):
@@ -62,7 +56,7 @@ class DataBaseFunction:
                 Events.date == self.now_date_str,  # Фильтр по сегодняшней дате
                 Events.group == group_name  # Фильтр по текущей группе
             )
-            count_students_data = group_filter(query, self.filter_group)
+            count_students_data = self.group_filter(query)
 
             # Переменные для подсчета студентов с последним статусом "вход"
             count = 0
@@ -84,7 +78,7 @@ class DataBaseFunction:
         query = self.get_students().filter(Events.date >= self.start_date_str,
                                            Events.date <= self.now_date_str).order_by(Events.name,
                                                                                       Events.date, Events.time)
-        students_data = group_filter(query, self.filter_group)
+        students_data = self.group_filter(query)
 
         students_info = {}
 
@@ -113,7 +107,7 @@ class DataBaseFunction:
     def get_unique_group(self):
         # Получаем список уникальных групп
         query = self.db.session.query(Events.group).distinct().order_by(Events.group)
-        unique_groups = [group[0] for group in group_filter(query, self.filter_group)]
+        unique_groups = [group[0] for group in self.group_filter(query)]
         return unique_groups
 
     def get_unique_dates(self):
@@ -133,3 +127,8 @@ class DataBaseFunction:
                 'time', Events.time
             ).label('event_info')
         )
+
+    def group_filter(self, query):
+        if self.filter_group is not None:
+            query = query.filter(Events.group == self.filter_group)
+        return query.all()
