@@ -16,22 +16,34 @@ db.init_app(app)
 
 migrate = Migrate(app, db)
 
+db_function = DataBaseFunction(db)
+
 
 @app.route('/import', methods=['GET'])
-def importXls():
+def import_xls():
     xlsimport = XlsImport('_xls', db)
     return jsonify(xlsimport.xls_import())
 
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    db_function = DataBaseFunction(db)
-    events = db_function.get_all_events()
+    events = db_function.get_events()
+    return (jsonify(events))
+
+
+@app.route('/get_data/<string:group>', methods=['GET'])
+def get_data_from_group(group):
+    events = db_function.get_events(group)
     return jsonify(events)
 
 
 @app.route('/', methods=['GET'])
 def index():
+    return render_template('index.html')
+
+
+@app.route('/group/<string:group>', methods=['GET'])
+def group_page(group):
     return render_template('index.html')
 
 

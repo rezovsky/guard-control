@@ -4,11 +4,20 @@ new Vue({
         items: [],
     },
     mounted() {
-        this.loadData();
+        const currentUrl = window.location.href;
+        const urlParts = currentUrl.split('/');
+        const groupIndex = urlParts.indexOf('group');
+        if (groupIndex > 0) {
+            group =  `/${urlParts[groupIndex + 1]}`
+        } else {
+            group = ''
+        }
+        console.log(group)
+        this.loadData(group);
     },
     methods: {
-        loadData() {
-            axios.get('/get_data')
+        loadData(group) {
+            axios.get(`/get_data${group}`)
                 .then(response => {
                     this.items = response.data;
                 })

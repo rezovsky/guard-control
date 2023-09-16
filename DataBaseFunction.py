@@ -25,7 +25,7 @@ class DataBaseFunction:
             self.db.session.add(new_event)
             self.db.session.commit()
 
-    def get_all_events(self):
+    def get_events(self, filter_group = None):
         # Вычисляем текущую дату и временной интервал для последних 7 дней
         end_date = datetime.now() #- timedelta(days=1)
         start_date = end_date - timedelta(days=14)
@@ -41,7 +41,11 @@ class DataBaseFunction:
         unique_dates = [datetime.strptime(date[0], '%Y-%m-%d').strftime('%d.%m') for date in unique_dates]
 
         # Получаем список уникальных групп
-        unique_groups = self.db.session.query(Events.group).distinct().order_by(Events.group).all()
+        query = self.db.session.query(Events.group).distinct().order_by(Events.group)
+        if filter_group is not None:
+            query = query.filter(Events.group == filter_group)
+
+        unique_groups = query.all()
         unique_groups = [group[0] for group in unique_groups]
 
         # Создаем словарь для хранения количества студентов с последним статусом "вход" по группам
@@ -50,7 +54,7 @@ class DataBaseFunction:
         # Перебираем группы
         for group_name in unique_groups:
             # Получаем список учеников и их последних событий за текущий день
-            count_students_data = self.db.session.query(
+            query = self.db.session.query(
                 Events.name,
                 func.json_build_object(
                     'action', Events.action,
@@ -59,7 +63,10 @@ class DataBaseFunction:
             ).filter(
                 Events.date == end_date_str,  # Фильтр по сегодняшней дате
                 Events.group == group_name  # Фильтр по текущей группе
-            ).all()
+            )
+            if filter_group is not None:
+                query = query.filter(Events.group == filter_group)
+            count_students_data = query.all()
             # Переменные для подсчета студентов с последним статусом "вход"
             count = 0
 
@@ -83,7 +90,7 @@ class DataBaseFunction:
             count_by_group[group_name] = count
 
         # Получаем список учеников с их событиями только за последние 7 дней
-        students_data = self.db.session.query(
+        query = self.db.session.query(
             Events.name,
             Events.group,
             Events.date,
@@ -92,7 +99,10 @@ class DataBaseFunction:
                 'time', Events.time
             ).label('event_info')
         ).filter(Events.date >= start_date_str, Events.date <= end_date_str).order_by(Events.name, Events.date,
-                                                                                      Events.time).all()
+                                                                                      Events.time)
+        if filter_group is not None:
+            query = query.filter(Events.group == filter_group)
+        students_data = query.all()
 
         students_info = {}
 
