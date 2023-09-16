@@ -38,38 +38,45 @@ class DataBaseFunction:
         data = {
             'unique_dates': self.get_unique_dates(),
             'unique_groups': self.get_unique_group(),
-            'count_by_group': self.get_last_enter(),
+            'count_by_group': self.get_entered_from_group(),
             'students_info': self.get_students_events()
         }
         return data
 
-    def get_last_enter(self):
+    def get_entered_from_group(self):
         # Создаем словарь для хранения количества студентов с последним статусом "вход" по группам
         count_by_group = {}
 
         # Перебираем группы
-        for group_name in self.get_unique_group():
-            # Получаем список учеников и их последних событий за текущий день
-            query = self.get_students().filter(
-                Events.date == self.now_date_str,  # Фильтр по сегодняшней дате
-                Events.group == group_name  # Фильтр по текущей группе
-            )
-            count_students_data = self.group_filter(query)
-
+        for group_name, group_events in self.get_status_by_group_of_date(self.now_date_str).items():
             # Переменные для подсчета студентов с последним статусом "вход"
             count = 0
-
-            # Перебираем учеников и их последние события
-            students_event = {}
-            for student in count_students_data:
-                students_event[student[0]] = student[3]['action']
-            for event in students_event.values():
+            for event in group_events.values():
                 if event == 'вход':
                     count += 1
 
             # Записываем результат в словарь
             count_by_group[group_name] = count
         return count_by_group
+
+    def get_status_by_group_of_date(self, date_str):
+        status_by_group = {}
+
+        # Перебираем группы
+        for group_name in self.get_unique_group():
+            # Получаем список учеников и их последних событий за текущий день
+            query = self.get_students().filter(
+                Events.date == date_str,  # Фильтр по дате
+                Events.group == group_name  # Фильтр по текущей группе
+            )
+            status_students_data = self.group_filter(query)
+
+            # Перебираем учеников и их последние события
+            students_event = {}
+            for student in status_students_data:
+                students_event[student[0]] = student[3]['action']
+            status_by_group[group_name] = students_event
+        return status_by_group
 
     def get_students_events(self):
         # Получаем список учеников с их событиями
