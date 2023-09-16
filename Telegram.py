@@ -1,17 +1,23 @@
-from selenium import webdriver
+import os
 
 
 class Telegram:
     def get_images(self, groups, base_url):
-        driver = webdriver.Chrome()
 
+        folder_path = 'images'
+
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
         for group in groups:
-            # Открываем веб-страницу с HTML таблицей
-            driver.get(f"{base_url}/group/{group}")
+            url = f"{base_url}/group/{group}"
 
-            # Создаем скриншот страницы
-            driver.save_screenshot('table_screenshot.png')
+            output_path = f"{folder_path}/{group}.png"
+
+            options = {
+                'format': 'png',
+                'width': 1024,
+                'height': 768,
+            }
 
 
-        driver.quit()
-        return
+        return 'ok'
