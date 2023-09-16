@@ -30,14 +30,12 @@ def import_xls():
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    events = db_function.get_data()
-    return (jsonify(events))
+    return jsonify(db_function.get_data())
 
 
 @app.route('/get_data/<string:group>', methods=['GET'])
 def get_data_from_group(group):
-    events = db_function.get_data(group)
-    return jsonify(events)
+    return jsonify(db_function.get_data(group))
 
 
 @app.route('/', methods=['GET'])

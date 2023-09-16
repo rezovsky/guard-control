@@ -1,9 +1,7 @@
 from datetime import datetime, timedelta
-from select import select
 
 from models import Events
 from sqlalchemy import func
-from flask import jsonify
 
 
 class DataBaseFunction:
