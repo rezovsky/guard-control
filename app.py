@@ -30,13 +30,13 @@ def import_xls():
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    events = db_function.get_events()
+    events = db_function.get_data()
     return (jsonify(events))
 
 
 @app.route('/get_data/<string:group>', methods=['GET'])
 def get_data_from_group(group):
-    events = db_function.get_events(group)
+    events = db_function.get_data(group)
     return jsonify(events)
 
 
@@ -44,11 +44,13 @@ def get_data_from_group(group):
 def index():
     return render_template('index.html')
 
+
 @app.route('/telegram/get_images', methods=['GET'])
 def get_images():
     base_url = request.url_root
     groups = db_function.get_unique_group()
     return tg.get_images(groups, base_url)
+
 
 @app.route('/group/<string:group>', methods=['GET'])
 def group_page(group):

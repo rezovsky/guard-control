@@ -15,11 +15,12 @@ def group_filter(query, filter_group):
 class DataBaseFunction:
 
     def __init__(self, db):
+        self.filter_group = None
         self.db = db
         self.days_interval = 14
 
         # Вычисляем текущую дату и временной интервал
-        now_date = datetime.now() - timedelta(days=2)  # это нужно для ночной разработки, когда уже наступило завтра
+        now_date = datetime.now() - timedelta(days=1)  # это нужно для ночной разработки, когда уже наступило завтра
         start_date = now_date - timedelta(days=self.days_interval)
 
         # Преобразуем даты в строки в соответствии с форматом в базе данных
@@ -40,18 +41,28 @@ class DataBaseFunction:
             self.db.session.add(new_event)
             self.db.session.commit()
 
-    def get_events(self, filter_group=None):
+    def get_data(self, filter_group=None):
+        self.filter_group = filter_group
+        data = {
+            'unique_dates': self.get_unique_dates(),
+            'unique_groups': self.get_unique_group(),
+            'count_by_group': self.get_last_enter(),
+            'students_info': self.get_students_events()
+        }
+        return data
+
+    def get_last_enter(self):
         # Создаем словарь для хранения количества студентов с последним статусом "вход" по группам
         count_by_group = {}
 
         # Перебираем группы
-        for group_name in self.get_unique_group(filter_group):
+        for group_name in self.get_unique_group():
             # Получаем список учеников и их последних событий за текущий день
             query = self.get_students().filter(
                 Events.date == self.now_date_str,  # Фильтр по сегодняшней дате
                 Events.group == group_name  # Фильтр по текущей группе
             )
-            count_students_data = group_filter(query, filter_group)
+            count_students_data = group_filter(query, self.filter_group)
 
             # Переменные для подсчета студентов с последним статусом "вход"
             count = 0
@@ -66,12 +77,14 @@ class DataBaseFunction:
 
             # Записываем результат в словарь
             count_by_group[group_name] = count
+        return count_by_group
 
+    def get_students_events(self):
         # Получаем список учеников с их событиями
         query = self.get_students().filter(Events.date >= self.start_date_str,
                                            Events.date <= self.now_date_str).order_by(Events.name,
                                                                                       Events.date, Events.time)
-        students_data = group_filter(query, filter_group)
+        students_data = group_filter(query, self.filter_group)
 
         students_info = {}
 
@@ -95,20 +108,12 @@ class DataBaseFunction:
                 'action': action,
                 'time': time
             })
+        return students_info
 
-        data = {
-            'unique_dates': self.get_unique_dates(),
-            'unique_groups': self.get_unique_group(filter_group),
-            'count_by_group': count_by_group,
-            'students_info': students_info
-        }
-
-        return data
-
-    def get_unique_group(self, filter_group):
+    def get_unique_group(self):
         # Получаем список уникальных групп
         query = self.db.session.query(Events.group).distinct().order_by(Events.group)
-        unique_groups = [group[0] for group in group_filter(query, filter_group)]
+        unique_groups = [group[0] for group in group_filter(query, self.filter_group)]
         return unique_groups
 
     def get_unique_dates(self):

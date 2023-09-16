@@ -12,7 +12,7 @@
         <div v-for="group in items.unique_groups" :key="group">
             <h3>{{ group }} (Сейчас в школе: {{ items.count_by_group[group] }})</h3>
             <div>
-                <span class="square gray"></span><span> - не использовалась карта</span><br>
+                <span class="square gray"></span><span> - карта не использовалась</span><br>
                 <span class="square green"></span><span> - карта использована на вход</span><br>
                 <span class="square red"></span><span> - карта использована на выход</span><br>
             </div>
