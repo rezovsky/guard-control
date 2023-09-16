@@ -8,6 +8,8 @@ class Telegram:
         self.border_px = 1
         self.box_px = 25
         self.folder_path = 'images'
+        self.image_width = 1280
+        self.image_height = 1024
         self.background_color = (255, 255, 255)
 
     def get_images(self):
@@ -15,17 +17,24 @@ class Telegram:
             os.makedirs(self.folder_path)
 
         for group in self.db_function.get_unique_group():
-            output_path = f"{self.folder_path}/{group}.png"
+            output_path = os.path.join(self.folder_path, f"{group}.png")
 
             students_data = self.db_function.get_data(group)
 
             dates_px = len(students_data['unique_dates']['filter_date']) * (self.box_px + self.border_px)
 
-            font = ImageFont.truetype("font/Arial.ttf", size=16)
+            font = ImageFont.truetype(os.path.join("font", "Arial.ttf"), size=18)
 
+            name_px = 0
             for student in students_data['students_info'][group]:
-                text_size = font.getlength(student)
-                print(text_size)
+                text_left, text_top, text_right, text_bottom = font.getbbox(student, "")
+                text_width = text_left + text_right
+                text_height = text_top + text_bottom
+                name_px = max(name_px, text_width) + 5
+
+            self.image_width = name_px + dates_px
+            print(self.image_width)
+
 
             # Создайте изображение и холст
             width = 1280  # Ширина изображения
