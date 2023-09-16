@@ -119,7 +119,10 @@ class DataBaseFunction:
         unique_dates = self.db.session.query(Events.date).distinct().filter(Events.date >= self.start_date_str,
                                                                             Events.date <= self.now_date_str).order_by(
             Events.date).all()
-        unique_dates = [datetime.strptime(date[0], '%Y-%m-%d').strftime('%d.%m') for date in unique_dates]
+        unique_dates = {
+            'text_date': [datetime.strptime(date[0], '%Y-%m-%d').strftime('%d.%m') for date in unique_dates],
+            'filter_date': [datetime.strptime(date[0], '%Y-%m-%d').strftime('%Y-%m-%d') for date in unique_dates]
+        }
         return unique_dates
 
     def get_students(self):

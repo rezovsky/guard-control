@@ -19,13 +19,13 @@
             <table>
                 <tr>
                     <th></th>
-                    <th v-for="date in items.unique_dates" :key="date">
+                    <th v-for="date in items.unique_dates.text_date" :key="date">
                         <span class="rotate-th">{{ date }}</span>
                     </th>
                 </tr>
                 <tr v-for="(student_events, student_name) in items.students_info[group]">
                     <td>{{ student_name }}</td>
-                    <td v-for="date in items.unique_dates">
+                    <td v-for="date in items.unique_dates.text_date">
                         <div :class="getStatus(date, student_events)" class="tooltip-container">
                             <div class="tooltip-content">
                                 {{ getLastEvent(date, student_events) }}

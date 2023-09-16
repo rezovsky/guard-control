@@ -1,18 +1,31 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 
+
 class Telegram:
     def __init__(self, db_function):
         self.db_function = db_function
+        self.border_px = 1
+        self.box_px = 25
+        self.folder_path = 'images'
+        self.background_color = (255, 255, 255)
 
     def get_images(self):
-        folder_path = 'images'
-
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
+        if not os.path.exists(self.folder_path):
+            os.makedirs(self.folder_path)
 
         for group in self.db_function.get_unique_group():
-            output_path = f"{folder_path}/{group}.png"
+            output_path = f"{self.folder_path}/{group}.png"
+
+            students_data = self.db_function.get_data(group)
+
+            dates_px = len(students_data['unique_dates']['filter_date']) * (self.box_px + self.border_px)
+
+            font = ImageFont.truetype("font/Arial.ttf", size=16)
+
+            for student in students_data['students_info'][group]:
+                text_size = font.getlength(student)
+                print(text_size)
 
             # Создайте изображение и холст
             width = 1280  # Ширина изображения
@@ -24,6 +37,7 @@ class Telegram:
             font = ImageFont.load_default()
 
             # Размеры ячеек таблицы
+
             cell_width = 25
             cell_height = 25
 
