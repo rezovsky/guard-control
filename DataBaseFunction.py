@@ -12,7 +12,7 @@ class DataBaseFunction:
         self.days_interval = 14
 
         # Вычисляем текущую дату и временной интервал
-        now_date = datetime.now() - timedelta(days=1)  # это нужно для ночной разработки, когда уже наступило завтра
+        now_date = datetime.now() #- timedelta(days=1)  # это нужно для ночной разработки, когда уже наступило завтра
         start_date = now_date - timedelta(days=self.days_interval)
 
         # Преобразуем даты в строки в соответствии с форматом в базе данных
