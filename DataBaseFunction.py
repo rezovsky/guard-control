@@ -30,6 +30,7 @@ class DataBaseFunction:
 
         if existing_event is None:
             new_event = Events(**data)
+            print(new_event)
             self.db.session.add(new_event)
             self.db.session.commit()
 
