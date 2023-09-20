@@ -12,6 +12,11 @@ class Telegram:
         self.image_width = 1280
         self.image_height = 1024
         self.background_color = (255, 255, 255)
+        self.color_gray = (200, 200, 200)
+        self.color_red = (230, 0, 0)
+        self.color_green = (0, 230, 0)
+        self.text_color = (0, 0, 0)
+        self.border_color = (100, 100, 100)
         self.image_border = 20
 
     def get_images(self):
@@ -42,45 +47,47 @@ class Telegram:
 
             # Создайте изображение и холст
 
-            image = Image.new("RGB", (self.image_width, self.image_height), "white")
+            image = Image.new("RGB", (self.image_width, self.image_height), self.background_color)
             draw = ImageDraw.Draw(image)
 
-            draw.text((self.image_border, self.image_border), group, fill="black", font=font)
+            draw.text((self.image_border, self.image_border), group, fill=self.text_color, font=font)
 
             students_list = []
             # Рисуем горизонтальные линии таблицы
             for index, student in enumerate(students_data['students_info'][group], start=1):
                 y = index * self.box_px + self.border_px + self.image_border
-                draw.line([(self.image_border, y), (self.image_width - self.image_border - self.border_px, y)], fill="black")
+                draw.line([(self.image_border, y), (self.image_width - self.image_border - self.border_px, y)],
+                          fill=self.border_color)
 
                 # Рисуем текст (имя студента) в центре ячейки
                 text_x = self.text_padding + self.image_border
                 text_y = y + (self.text_padding / 2)
-                draw.text((text_x, text_y), student, fill="black", font=font)
+                draw.text((text_x, text_y), student, fill=self.text_color, font=font)
                 students_list.append(student)
 
             # Рисуем вертикальные линии таблицы
             for index, date in enumerate(students_data['unique_dates']['filter_date'], start=0):
-                x = index * (self.box_px + self.border_px) + name_px + self.text_padding + self.border_px + self.image_border
-                draw.line([(x, self.image_border), (x, self.image_height - self.image_border)], fill="black")
+                x = index * (
+                        self.box_px + self.border_px) + name_px + self.text_padding + self.border_px + self.image_border
+                draw.line([(x, self.image_border), (x, self.image_height - self.image_border)], fill=self.border_color)
 
                 day_number = date.split('-')[2]
                 day_number_px_array = font.getbbox(day_number, "")
                 day_number_px = day_number_px_array[2] - day_number_px_array[0]
                 day_number_x = (self.box_px - day_number_px) / 2
 
-                draw.text(((x + day_number_x), self.image_border), day_number, fill="black", font=font)
+                draw.text(((x + day_number_x), self.image_border), day_number, fill=self.text_color, font=font)
 
                 status_list = self.db_function.get_status_by_group_of_date(date)[group]
                 for row_number, student in enumerate(students_list, start=1):
                     if student in status_list:
                         status = status_list[student]
                         if status == 'выход':
-                            color = 'red'
+                            color = self.color_red
                         else:
-                            color = 'green'
+                            color = self.color_green
                     else:
-                        color = 'gray'
+                        color = self.color_gray
 
                     x0 = x + self.border_px
                     y0 = row_number * self.box_px + (self.border_px * 2) + self.image_border
