@@ -26,14 +26,16 @@ class Telegram:
             font = ImageFont.truetype(os.path.join("font", "Arial.ttf"), size=18)
 
             name_px = 0
+            text_height_px = 0
             for student in students_data['students_info'][group]:
                 text_left, text_top, text_right, text_bottom = font.getbbox(student, "")
                 text_width = text_left + text_right
                 text_height = text_top + text_bottom
+                text_height_px = max(text_height_px, text_height)
                 name_px = max(name_px, text_width) + 5
 
             self.image_width = name_px + dates_px
-            print(self.image_width)
+            print(f"{self.image_width} - {text_height_px}")
 
 
             # Создайте изображение и холст
