@@ -13,6 +13,7 @@ new Vue({
         } else {
             this.group = ''
         }
+        this.loadData()
         setInterval(this.loadData, 60000);
     },
     methods: {
