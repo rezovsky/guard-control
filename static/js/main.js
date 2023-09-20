@@ -14,7 +14,7 @@ new Vue({
             this.group = ''
         }
         this.loadData()
-        setInterval(this.loadData, 60000);
+        setInterval(this.loadData, 30000);
     },
     methods: {
         loadData() {
