@@ -65,6 +65,7 @@ class XlsImport:
                     'action': action,
                     'time': time
                 }
+                print(event)
                 self.db_function.add_event(event)
 
             previous_row_data = row
