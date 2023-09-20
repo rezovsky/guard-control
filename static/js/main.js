@@ -2,22 +2,22 @@ new Vue({
     el: '#app',
     data: {
         items: [],
+        group: '',
     },
     mounted() {
         const currentUrl = window.location.href;
         const urlParts = currentUrl.split('/');
         const groupIndex = urlParts.indexOf('group');
         if (groupIndex > 0) {
-            group =  `/${urlParts[groupIndex + 1]}`
+            this.group =  `/${urlParts[groupIndex + 1]}`
         } else {
-            group = ''
+            this.group = ''
         }
-        console.log(group)
-        this.loadData(group);
+        setInterval(this.loadData, 60000);
     },
     methods: {
-        loadData(group) {
-            axios.get(`/get_data${group}`)
+        loadData() {
+            axios.get(`/get_data${this.group}`)
                 .then(response => {
                     this.items = response.data;
                 })
