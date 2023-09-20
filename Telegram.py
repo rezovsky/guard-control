@@ -35,48 +35,33 @@ class Telegram:
                 name_px = max(name_px, text_width) + 5
 
             self.image_width = name_px + dates_px
-            print(f"{self.image_width} - {text_height_px}")
-
 
             # Создайте изображение и холст
-            width = 1280  # Ширина изображения
-            height = 1024  # Высота изображения
-            image = Image.new("RGB", (width, height), "white")
+
+            image = Image.new("RGB", (self.image_width, self.image_height), "white")
             draw = ImageDraw.Draw(image)
 
-            # Шрифт для текста
-            font = ImageFont.load_default()
-
-            # Размеры ячеек таблицы
-
-            cell_width = 25
-            cell_height = 25
-
-            # Список дат и имен
-            dates = ["01.09", "02.09", "03.09"]
-            students_names = ["Student 1", "Student 2", "Student 3"]
-
             # Рисуем горизонтальные линии таблицы
-            for i in range(len(students_names) + 1):
-                y = i * cell_height
-                draw.line([(0, y), (width, y)], fill="black")
+            for i in range(len(students_data['students_info'][group]) + 1):
+                y = i * self.box_px
+                draw.line([(0, y), (self.image_width, y)], fill="black")
 
             # Рисуем вертикальные линии таблицы
-            for i in range(len(dates) + 1):
-                x = i * cell_width
-                draw.line([(x, 0), (x, height)], fill="black")
+            for i in range(len(students_data['unique_dates']['filter_date']) + 1):
+                x = i * self.box_px
+                draw.line([(x, 0), (x, self.image_height)], fill="black")
 
             # Заполняем ячейки таблицы данными
-            for row, student_name in enumerate(students_names):
-                for col, date in enumerate(dates):
+            for row, student_name in enumerate(student):
+                for col, date in enumerate(students_data['unique_dates']['filter_date']):
                     # Определите цвет для ячейки в соответствии с вашей логикой
                     color = "green"  # Замените на свой цвет
 
                     # Рисуем квадрат
-                    x0 = col * cell_width
-                    y0 = row * cell_height
-                    x1 = x0 + cell_width
-                    y1 = y0 + cell_height
+                    x0 = col * self.box_px
+                    y0 = row * self.box_px
+                    x1 = x0 + self.box_px
+                    y1 = y0 + self.box_px
                     draw.rectangle([x0, y0, x1, y1], fill=color)
 
                     # Рисуем текст (имя студента) в центре ячейки
