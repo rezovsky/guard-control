@@ -7,17 +7,13 @@ from sqlalchemy import func
 class DataBaseFunction:
 
     def __init__(self, db):
+        self.now_date_str = None
+        self.start_date_str = None
         self.filter_group = None
         self.db = db
         self.days_interval = 14
 
-        # Вычисляем текущую дату и временной интервал
-        now_date = datetime.now() #- timedelta(days=1)  # это нужно для ночной разработки, когда уже наступило завтра
-        start_date = now_date - timedelta(days=self.days_interval)
-
-        # Преобразуем даты в строки в соответствии с форматом в базе данных
-        self.start_date_str = start_date.strftime('%Y-%m-%d')
-        self.now_date_str = now_date.strftime('%Y-%m-%d')
+        self.get_now_date()
 
     def add_event(self, data):
         existing_event = Events.query.filter_by(
@@ -35,6 +31,7 @@ class DataBaseFunction:
             self.db.session.commit()
 
     def get_data(self, filter_group=None):
+        self.get_now_date()
         self.filter_group = filter_group
         data = {
             'unique_dates': self.get_unique_dates(),
@@ -141,3 +138,12 @@ class DataBaseFunction:
         if self.filter_group is not None:
             query = query.filter(Events.group == self.filter_group)
         return query.all()
+
+    def get_now_date(self):
+        # Вычисляем текущую дату и временной интервал
+        now_date = datetime.now()  # - timedelta(days=1)  # это нужно для ночной разработки, когда уже наступило завтра
+        start_date = now_date - timedelta(days=self.days_interval)
+
+        # Преобразуем даты в строки в соответствии с форматом в базе данных
+        self.start_date_str = start_date.strftime('%Y-%m-%d')
+        self.now_date_str = now_date.strftime('%Y-%m-%d')
