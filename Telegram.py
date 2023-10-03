@@ -12,11 +12,11 @@ class Telegram:
         self.image_width = 1280
         self.image_height = 1024
         self.background_color = (255, 255, 255)
-        self.color_gray = (200, 200, 200)
-        self.color_red = (230, 0, 0)
-        self.color_green = (0, 230, 0)
+        self.color_gray = (172, 242, 222)
+        self.color_red = (242, 56, 56)
+        self.color_green = (3, 140, 23)
         self.text_color = (0, 0, 0)
-        self.border_color = (100, 100, 100)
+        self.border_color = (3, 101, 140)
         self.image_border = 20
 
     def get_images(self):
