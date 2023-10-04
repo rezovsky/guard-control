@@ -35,6 +35,8 @@ class Telegram:
 
             name_px = 0
             name_height_px = 0
+            if not students_data['students_info'][group]:
+                break
             for student in students_data['students_info'][group]:
                 text_left, text_top, text_right, text_bottom = font.getbbox(student, "")
                 text_width = text_right - text_left
