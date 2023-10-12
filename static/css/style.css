@@ -9,7 +9,7 @@ table, th, td {
 }
 
 th, td {
-  border: 1px solid #cccccc;
+  border: 1px solid rgb(3, 101, 140);
 }
 
 
@@ -27,15 +27,15 @@ th, td {
 }
 
 .gray {
-  background-color: gray;
+  background-color: rgb(172, 242, 222);
 }
 
 .green {
-  background-color: green;
+  background-color: rgb(3, 140, 23);
 }
 
 .red {
-  background-color: red;
+  background-color: rgb(242, 56, 56);
 }
 
 /* Стили для контейнера подсказки */
